@@ -151,7 +151,6 @@ Window {
                 onValueChanged: {
                     timerCanvas.setMinute = value
                     timerCanvas.requestPaint()
-                    console.log("change")
                 }
 
                 Keys.onPressed: {
