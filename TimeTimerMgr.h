@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QQuickWindow>
 
 #include "ConfigureDialog.h"
 
@@ -30,13 +31,14 @@ public slots:
     void Slot_GetColor(QColor color);
     void Slot_GetOpacity(double dOpacity);
     void Slot_GetAlwaysOnTop(bool bChecked);
+    void Slot_DialogClose();
 
 signals:
 
 private:
-    ConfigureDialog* pDialog;
+    ConfigureDialog* m_pDialog;
     QQmlApplicationEngine* m_engine;
-    QObject* m_pWindow;
+    QQuickWindow* m_pWindow;
     QObject* m_pTimeCanvas;
     QTimer timer;
     int m_nTime;

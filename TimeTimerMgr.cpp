@@ -3,7 +3,7 @@
 
 TimeTimerMgr::TimeTimerMgr(QObject *parent)
     : QObject{parent}
-    , pDialog(NULL)
+    , m_pDialog(NULL)
     , m_engine(NULL)
     , m_pWindow(NULL)
     , m_pTimeCanvas(NULL)
@@ -15,19 +15,21 @@ TimeTimerMgr::TimeTimerMgr(QObject *parent)
 
 void TimeTimerMgr::showDialog()
 {
-    pDialog = new ConfigureDialog(this, m_engine);
+    if ( m_pDialog != NULL ) { return; }
+    m_pDialog = new ConfigureDialog(this, m_engine);
 
-    connect(pDialog, SIGNAL(Emit_setColor(QColor)), this, SLOT(Slot_GetColor(QColor)), Qt::UniqueConnection);
-    connect(pDialog, SIGNAL(Emit_setOpacity(double)), this, SLOT(Slot_GetOpacity(double)), Qt::UniqueConnection);
-    connect(pDialog, SIGNAL(Emit_setAlwaysOnTop(bool)), this, SLOT(Slot_GetAlwaysOnTop(bool)), Qt::UniqueConnection);
+    connect(m_pDialog, SIGNAL(Emit_setColor(QColor)), this, SLOT(Slot_GetColor(QColor)), Qt::UniqueConnection);
+    connect(m_pDialog, SIGNAL(Emit_setOpacity(double)), this, SLOT(Slot_GetOpacity(double)), Qt::UniqueConnection);
+    connect(m_pDialog, SIGNAL(Emit_setAlwaysOnTop(bool)), this, SLOT(Slot_GetAlwaysOnTop(bool)), Qt::UniqueConnection);
+    connect(m_pDialog, SIGNAL(Emit_Close()), this, SLOT(Slot_DialogClose()), Qt::UniqueConnection);
 
     TimerSetting settingValue;
     settingValue.color        = m_pTimeCanvas->property("timeColor").value<QColor>();
     settingValue.opacity      = m_pWindow->property("dOpacity").toDouble();
     settingValue.bAlwaysOnTop = m_pWindow->property("bAlwaysOnTop").toBool();
 
-    pDialog->Show();
-    pDialog->SetSettingValue(settingValue);
+    m_pDialog->Show();
+    m_pDialog->SetSettingValue(settingValue);
 }
 
 void TimeTimerMgr::Slot_Start()
@@ -74,13 +76,20 @@ void TimeTimerMgr::Slot_GetOpacity(double dOpacity)
 void TimeTimerMgr::Slot_GetAlwaysOnTop(bool bChecked)
 {
     m_pWindow->setProperty("bAlwaysOnTop", bChecked);
+
+    m_pWindow->setFlag(Qt::WindowStaysOnTopHint, bChecked);
+}
+
+void TimeTimerMgr::Slot_DialogClose()
+{
+    m_pDialog = NULL;
 }
 
 TimeTimerMgr::~TimeTimerMgr()
 {
-    if ( pDialog != NULL ) {
-        delete pDialog;
-        pDialog = NULL;
+    if ( m_pDialog != NULL ) {
+        delete m_pDialog;
+        m_pDialog = NULL;
     }
 }
 
@@ -93,11 +102,11 @@ void TimeTimerMgr::SetEngine(QQmlApplicationEngine* engine)
 void TimeTimerMgr::InitIteragte()
 {
     if ( m_engine == NULL ) { return; }
-//    m_engine->rootContext()->setContextProperty("timerMgr",this);
+    m_engine->rootContext()->setContextProperty("timerMgr",this);
     QList<QObject*> objectList = m_engine->rootObjects();
 
     if ( objectList.count() < 1 ) { return; }
-    m_pWindow = objectList.value(0);
+    m_pWindow = qobject_cast<QQuickWindow*>(objectList.value(0));
 
     if ( m_pWindow == NULL ) { return; }
     connect(m_pWindow, SIGNAL(emit_Start()), this, SLOT(Slot_Start()), Qt::UniqueConnection);

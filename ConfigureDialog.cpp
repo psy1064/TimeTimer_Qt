@@ -19,10 +19,18 @@ void ConfigureDialog::Show()
     connect(m_pView, SIGNAL(emit_changeColor(QColor)), this, SLOT(Slot_GetColor(QColor)), Qt::UniqueConnection);
     connect(m_pView, SIGNAL(emit_changeOpcaity(double)), this, SLOT(Slot_GetOpacity(double)), Qt::UniqueConnection);
     connect(m_pView, SIGNAL(emit_changeAlwaysOnTop(bool)), this, SLOT(Slot_GetAlwaysOnTop(bool)), Qt::UniqueConnection);
+    connect(m_pView, SIGNAL(closing(QQuickCloseEvent*)), this, SLOT(Slot_Close()), Qt::UniqueConnection);
 
     m_pEngine->rootContext()->setContextProperty("contorlDlg",this);
 
     m_pView->show();
+
+    if ( m_pEngine->rootObjects().count() < 1 ) { return; }
+
+    QQuickWindow* pObject = qobject_cast<QQuickWindow*>(m_pEngine->rootObjects().value(0));
+    m_pView->show();
+    int x = m_pView->geometry().x() + pObject->width();
+    m_pView->setX(x);
 }
 
 void ConfigureDialog::SetSettingValue(TimerSetting &setValue)
@@ -45,6 +53,12 @@ void ConfigureDialog::Slot_GetOpacity(double dOpacity)
 void ConfigureDialog::Slot_GetAlwaysOnTop(bool bChecked)
 {
     emit Emit_setAlwaysOnTop(bChecked);
+}
+
+void ConfigureDialog::Slot_Close()
+{
+    qDebug() << "Close";
+    emit Emit_Close();
 }
 
 ConfigureDialog::~ConfigureDialog()

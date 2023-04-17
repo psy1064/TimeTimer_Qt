@@ -29,11 +29,13 @@ signals:
     void Emit_setColor(QColor color);
     void Emit_setOpacity(double dOpacity);
     void Emit_setAlwaysOnTop(bool bChecked);
+    void Emit_Close();
 
 public slots:
     void Slot_GetColor(QColor color);
     void Slot_GetOpacity(double dOpacity);
     void Slot_GetAlwaysOnTop(bool bChecked);
+    void Slot_Close();
 
 private:
     QQuickWindow* m_pView;

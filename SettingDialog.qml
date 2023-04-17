@@ -97,7 +97,6 @@ Window {
             Layout.alignment: Qt.AlignCenter
 
             onValueChanged: {
-                console.log(value)
                 settingDlg.emit_changeOpcaity(value)
             }
         }
