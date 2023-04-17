@@ -59,6 +59,8 @@ void TimeTimerMgr::Slot_Timeout()
 
     if ( m_nTime*60 == m_nCount ) {
         timer.stop();
+        m_pWindow->setFlag(Qt::WindowStaysOnTopHint, false);
+        m_pWindow->setProperty("bAlwaysOnTop", false);
     }
 }
 

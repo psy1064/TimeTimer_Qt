@@ -147,9 +147,17 @@ Window {
                 value: 60
                 to: 60
                 stepSize: 1
+                editable: true
                 onValueChanged: {
                     timerCanvas.setMinute = value
                     timerCanvas.requestPaint()
+                    console.log("change")
+                }
+
+                Keys.onPressed: {
+                    if ( event.key === Qt.Key_Enter || event.key === Qt.Key_Return ) {
+                        focus = false
+                    }
                 }
             }
 
