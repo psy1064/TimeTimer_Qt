@@ -99,7 +99,6 @@ Window {
 
             onValueChanged: {
                 settingDlg.emit_changeOpcaity(value)
-                settingDlg.emit_Call()
             }
         }
     }
