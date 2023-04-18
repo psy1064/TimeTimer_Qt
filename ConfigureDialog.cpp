@@ -57,7 +57,6 @@ void ConfigureDialog::Slot_GetAlwaysOnTop(bool bChecked)
 
 void ConfigureDialog::Slot_Close()
 {
-    qDebug() << "Close";
     emit Emit_Close();
 }
 

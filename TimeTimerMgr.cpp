@@ -45,6 +45,8 @@ void TimeTimerMgr::Slot_Pause()
 
 void TimeTimerMgr::Slot_Stop()
 {
+    if ( !timer.isActive() ) { return; }    // Run 중 아니라면 바로 Return
+
     timer.stop();
     m_pTimeCanvas->setProperty("setSecond", (m_nTime*60));
     QMetaObject::invokeMethod(m_pTimeCanvas, "rePaint");

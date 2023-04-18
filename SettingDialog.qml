@@ -25,6 +25,7 @@ Window {
     signal emit_changeColor(color back);
     signal emit_changeOpcaity(double dOpacity);
     signal emit_changeAlwaysOnTop(bool bChecked);
+    signal emit_Call()
 
     GridLayout {
         anchors.fill: parent
@@ -98,6 +99,7 @@ Window {
 
             onValueChanged: {
                 settingDlg.emit_changeOpcaity(value)
+                settingDlg.emit_Call()
             }
         }
     }
