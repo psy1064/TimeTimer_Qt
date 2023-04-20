@@ -1,4 +1,4 @@
-QT += quick
+QT += quick multimedia
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -6,6 +6,7 @@ QT += quick
 
 SOURCES += \
         ConfigureDialog.cpp \
+        SoundListModelItem.cpp \
         TimeTimer.cpp \
         TimeTimerMgr.cpp
 
@@ -25,6 +26,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     ConfigureDialog.h \
+    SoundListModelItem.h \
     TimeTimerMgr.h
 
 

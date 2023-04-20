@@ -1,5 +1,6 @@
 #include "TimeTimerMgr.h"
 #include <QQmlProperty>
+#include <QSound>
 
 TimeTimerMgr::TimeTimerMgr(QObject *parent)
     : QObject{parent}
@@ -9,6 +10,7 @@ TimeTimerMgr::TimeTimerMgr(QObject *parent)
     , m_pTimeCanvas(NULL)
     , m_nTime(0)
     , m_nCount(0)
+    , m_sAlarmSound("")
 {
     connect(&timer, SIGNAL(timeout()), this, SLOT(Slot_Timeout()), Qt::UniqueConnection);
 }
@@ -21,12 +23,14 @@ void TimeTimerMgr::showDialog()
     connect(m_pDialog, SIGNAL(Emit_setColor(QColor)), this, SLOT(Slot_GetColor(QColor)), Qt::UniqueConnection);
     connect(m_pDialog, SIGNAL(Emit_setOpacity(double)), this, SLOT(Slot_GetOpacity(double)), Qt::UniqueConnection);
     connect(m_pDialog, SIGNAL(Emit_setAlwaysOnTop(bool)), this, SLOT(Slot_GetAlwaysOnTop(bool)), Qt::UniqueConnection);
+    connect(m_pDialog, SIGNAL(Emit_setAlarmSound(QString)), this, SLOT(Slot_GetAlarmSound(QString)), Qt::UniqueConnection);
     connect(m_pDialog, SIGNAL(Emit_Close()), this, SLOT(Slot_DialogClose()), Qt::UniqueConnection);
 
     TimerSetting settingValue;
     settingValue.color        = m_pTimeCanvas->property("timeColor").value<QColor>();
     settingValue.opacity      = m_pWindow->property("dOpacity").toDouble();
     settingValue.bAlwaysOnTop = m_pWindow->property("bAlwaysOnTop").toBool();
+    settingValue.sAlarmSound  = m_sAlarmSound;
 
     m_pDialog->Show();
     m_pDialog->SetSettingValue(settingValue);
@@ -63,6 +67,8 @@ void TimeTimerMgr::Slot_Timeout()
         timer.stop();
         m_pWindow->setFlag(Qt::WindowStaysOnTopHint, false);
         m_pWindow->setProperty("bAlwaysOnTop", false);
+
+        QSound::play("C:/Windows/Media/" + m_sAlarmSound);
     }
 }
 
@@ -82,6 +88,11 @@ void TimeTimerMgr::Slot_GetAlwaysOnTop(bool bChecked)
     m_pWindow->setProperty("bAlwaysOnTop", bChecked);
 
     m_pWindow->setFlag(Qt::WindowStaysOnTopHint, bChecked);
+}
+
+void TimeTimerMgr::Slot_GetAlarmSound(QString sAlarm)
+{
+    m_sAlarmSound = sAlarm;
 }
 
 void TimeTimerMgr::Slot_DialogClose()

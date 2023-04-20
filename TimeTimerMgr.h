@@ -31,6 +31,7 @@ public slots:
     void Slot_GetColor(QColor color);
     void Slot_GetOpacity(double dOpacity);
     void Slot_GetAlwaysOnTop(bool bChecked);
+    void Slot_GetAlarmSound(QString sAlarm);
     void Slot_DialogClose();
 
 signals:
@@ -40,6 +41,8 @@ private:
     QQmlApplicationEngine* m_engine;
     QQuickWindow* m_pWindow;
     QObject* m_pTimeCanvas;
+
+    QString m_sAlarmSound;
     QTimer timer;
     int m_nTime;
     int m_nCount;

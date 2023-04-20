@@ -1,6 +1,7 @@
 #include "ConfigureDialog.h"
 #include <QQmlComponent>
 #include <QQmlContext>
+#include "SoundListModelItem.h"
 
 ConfigureDialog::ConfigureDialog(QObject *parent, QQmlApplicationEngine *engine)
     : QObject{parent}
@@ -19,17 +20,17 @@ void ConfigureDialog::Show()
     connect(m_pView, SIGNAL(emit_changeColor(QColor)), this, SLOT(Slot_GetColor(QColor)), Qt::UniqueConnection);
     connect(m_pView, SIGNAL(emit_changeOpcaity(double)), this, SLOT(Slot_GetOpacity(double)), Qt::UniqueConnection);
     connect(m_pView, SIGNAL(emit_changeAlwaysOnTop(bool)), this, SLOT(Slot_GetAlwaysOnTop(bool)), Qt::UniqueConnection);
+    connect(m_pView, SIGNAL(emit_changeAlarmSound(QString)), this, SLOT(Slot_GetAlarmSound(QString)), Qt::UniqueConnection);
     connect(m_pView, SIGNAL(closing(QQuickCloseEvent*)), this, SLOT(Slot_Close()), Qt::UniqueConnection);
 
     m_pEngine->rootContext()->setContextProperty("contorlDlg",this);
-
     m_pView->show();
 
     if ( m_pEngine->rootObjects().count() < 1 ) { return; }
 
     QQuickWindow* pObject = qobject_cast<QQuickWindow*>(m_pEngine->rootObjects().value(0));
-    m_pView->show();
     int x = m_pView->geometry().x() + pObject->width();
+
     m_pView->setX(x);
 }
 
@@ -38,6 +39,8 @@ void ConfigureDialog::SetSettingValue(TimerSetting &setValue)
     m_pView->setProperty("backColor", setValue.color);
     m_pView->setProperty("dOpacity", setValue.opacity);
     m_pView->setProperty("bAlwaysOnTop", setValue.bAlwaysOnTop);
+    m_pView->setProperty("sAlarmSound", setValue.sAlarmSound);
+    qDebug() << setValue.sAlarmSound;
 }
 
 void ConfigureDialog::Slot_GetColor(QColor color)
@@ -53,6 +56,12 @@ void ConfigureDialog::Slot_GetOpacity(double dOpacity)
 void ConfigureDialog::Slot_GetAlwaysOnTop(bool bChecked)
 {
     emit Emit_setAlwaysOnTop(bChecked);
+}
+
+void ConfigureDialog::Slot_GetAlarmSound(QString sAlarm)
+{
+    emit Emit_setAlarmSound(sAlarm);
+    qDebug() << "get" << sAlarm;
 }
 
 void ConfigureDialog::Slot_Close()

@@ -193,6 +193,18 @@ Window {
             }
         }
     }
+
+    SettingDialog {
+        id : dlg
+        Component.onCompleted: {
+            dlg.emit_changeOpcaity.connect(test)
+        }
+    }
+
+    function test(value) {
+        console.log(value)
+    }
+
 }
 
 

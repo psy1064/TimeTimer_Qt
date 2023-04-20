@@ -9,11 +9,13 @@ typedef struct _TimerSetting {
     QColor color;
     double opacity;
     bool bAlwaysOnTop;
+    QString sAlarmSound;
 
     _TimerSetting() {
         color.setRgb(0,0,0);
         opacity = 0;
         bAlwaysOnTop = false;
+        sAlarmSound = "";
     }
 } TimerSetting;
 
@@ -29,12 +31,14 @@ signals:
     void Emit_setColor(QColor color);
     void Emit_setOpacity(double dOpacity);
     void Emit_setAlwaysOnTop(bool bChecked);
+    void Emit_setAlarmSound(QString sAlarm);
     void Emit_Close();
 
 public slots:
     void Slot_GetColor(QColor color);
     void Slot_GetOpacity(double dOpacity);
     void Slot_GetAlwaysOnTop(bool bChecked);
+    void Slot_GetAlarmSound(QString sAlarm);
     void Slot_Close();
 
 private:
